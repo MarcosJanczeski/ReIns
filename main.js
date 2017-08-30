@@ -40,6 +40,5 @@ readDir(path, (err, files) => {
         })
       }
     })
-    
   }
 })
