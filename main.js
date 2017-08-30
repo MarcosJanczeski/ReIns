@@ -28,7 +28,7 @@ readDir(path, (err, files) => {
               line = lines[i].split(' VALUES ')
               if (line.length === 2) {
                 if (reg % 1000 === 0) {
-                  fs.appendFileSync(path + '_ReIns.sql', line[0] + ' VALUES ' + os.EOL + line[1].substr(0, line[1].length - 1) + ',\r\n')
+                  fs.appendFileSync(path + '_ReIns.sql', line[0] + ' VALUES ' + os.EOL + line[1].substr(0, line[1].length - 1) + ','+ os.EOL)
                   reg += 1
                 } else {
                   fs.appendFileSync(path + '_ReIns.sql', line[1].substr(0, line[1].length - 1) + ((((reg + 1) % 1000 === 0) || (lines[i+1]==='')) ? ';' : ',') + os.EOL)
