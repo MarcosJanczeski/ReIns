@@ -7,15 +7,17 @@ readDir(path, (err, files) => {
   if (err) {
     (console.log(err.message))
   } else {
-    fs.open(path+'_ReIns.sql', 'w', (err, fd)=>{
-      if(err){
-        console.log('Falha ao abrir arquivo: '+err)
-      }else{
-        fs.close(fd, (err)=>{
-          if(err) console.log('Falha ao fechar arquivo: '+err)
+    fs.open(path + '_ReIns.sql', 'w', (err, fd) => {
+      if (err) {
+        console.log('Falha ao abrir arquivo: ' + err)
+      } else {
+        fs.close(fd, (err) => {
+          if (err)
+            console.log('Falha ao fechar arquivo: ' + err)
         })
       }
     })
+    fs.appendFileSync(path + '_ReIns.sql', `USE ${schema};${os.EOL}`)
     files.forEach(file => {
       if (file.indexOf('.sql') > 0) {
         fs.readFile(path + file, (err, data) => {
@@ -28,12 +30,11 @@ readDir(path, (err, files) => {
               line = lines[i].split(' VALUES ')
               if (line.length === 2) {
                 if (reg % 1000 === 0) {
-                  fs.appendFileSync(path + '_ReIns.sql', line[0] + ' VALUES ' + os.EOL + line[1].substr(0, line[1].length - 1) + ','+ os.EOL)
-                  reg += 1
+                  fs.appendFileSync(`${path}_ReIns.sql`, `${line[0]} VALUES ${os.EOL}${line[1].substr(0, line[1].length - 1)},${os.EOL}`)
                 } else {
-                  fs.appendFileSync(path + '_ReIns.sql', line[1].substr(0, line[1].length - 1) + ((((reg + 1) % 1000 === 0) || (lines[i+1]==='')) ? ';' : ',') + os.EOL)
-                  reg += 1
+                  fs.appendFileSync(path + '_ReIns.sql', line[1].substr(0, line[1].length - 1) + ((((reg + 1) % 1000 === 0) || (lines[i + 1] === '')) ? ';' : ',') + os.EOL)
                 }
+                reg += 1
               }
             }
           }
