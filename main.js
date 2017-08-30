@@ -7,7 +7,15 @@ readDir(path, (err, files) => {
   if (err) {
     (console.log(err.message))
   } else {
-    fs.open(path+'_ReIns.sql', 'w', (err)=>{if(err) console.log('Falha ao deletar arquivo: '+err)})
+    fs.open(path+'_ReIns.sql', 'w', (err, fd)=>{
+      if(err){
+        console.log('Falha ao abrir arquivo: '+err)
+      }else{
+        fs.close(fd, (err)=>{
+          if(err) console.log('Falha ao fechar arquivo: '+err)
+        })
+      }
+    })
     files.forEach(file => {
       if (file.indexOf('.sql') > 0) {
         fs.readFile(path + file, (err, data) => {
@@ -32,5 +40,6 @@ readDir(path, (err, files) => {
         })
       }
     })
+    
   }
 })
